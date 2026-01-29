@@ -12,9 +12,35 @@
       </select>
     </label>
    <label>Datum in čas prihoda:
-  <input type="text" name="arrived_at" required placeholder="DD.MM.YYYY HH:MM">
+    <div style="display: flex; gap: 8px; align-items: baseline;">
+      <input type="date" name="arrival_date" required class="styled-input align-baseline">
+      <input type="time" name="arrival_time" required class="styled-input align-baseline">
+    </div>
 </label>
     <button type="submit">Dodaj prihod</button>
+    <style>
+      .align-baseline {
+        align-self: baseline;
+      }
+      .styled-input {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+        background: #fff;
+        box-sizing: border-box;
+        height: 38px;
+        min-height: 38px;
+        line-height: 1.2;
+        vertical-align: middle;
+        margin: 0;
+        display: inline-block;
+      }
+      .styled-input:focus {
+        border-color: #0078d7;
+        outline: none;
+      }
+    </style>
   </form>
 </div>
 {% endblock %}

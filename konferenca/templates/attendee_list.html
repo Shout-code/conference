@@ -14,7 +14,7 @@
   <tr>
     <td>{{ attendee.first_name }}</td>
     <td>{{ attendee.last_name }}</td>
-    <td>{{ attendee.birth_date }}</td>
+    <td>{{ attendee.birth_date|date:'d.m.Y' }}</td>
     <td>{{ attendee.card_number }}</td>
     <td><a href="{% url 'attendee_edit' attendee.id %}">Uredi</a></td>
   </tr>

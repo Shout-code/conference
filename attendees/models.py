@@ -25,8 +25,8 @@ class AttendeeChangeLog(models.Model):
 
 class AttendeeChange(models.Model):
     ACTION_CHOICES = [
-        ('add', 'Add'),
-        ('edit', 'Edit'),
+        ('add', 'Dodaj'),
+        ('edit', 'Uredi'),
         ('delete', 'Delete'),
     ]
     attendee = models.ForeignKey('Attendee', on_delete=models.CASCADE, null=True, blank=True)

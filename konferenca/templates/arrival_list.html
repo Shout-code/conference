@@ -22,16 +22,18 @@
   <table style="width:100%; border-collapse:collapse;">
     <tr>
       <th>Udeleženec</th>
-      <th>Datum in čas prihoda</th>
+      <th>Datum prihoda</th>
+      <th>Čas prihoda</th>
     </tr>
     {% for arrival in arrivals %}
     <tr>
       <td>{{ arrival.attendee.first_name }} {{ arrival.attendee.last_name }}</td>
-      <td>{{ arrival.arrived_at }}</td>
+      <td>{% with d=arrival.arrived_at %}{{ d.day|stringformat:'02d' }}.{{ d.month|stringformat:'02d' }}.{{ d.year }}{% endwith %}</td>
+      <td>{% with t=arrival.arrived_at %}{{ t.hour|stringformat:'02d' }}:{{ t.minute|stringformat:'02d' }}{% endwith %}</td>
     </tr>
     {% empty %}
     <tr>
-      <td colspan="2">Ni prihodov.</td>
+      <td colspan="3">Ni prihodov.</td>
     </tr>
     {% endfor %}
   </table>

@@ -22,10 +22,10 @@ def attendee_add(request):
         card_number = request.POST.get('card_number')
         birth_date = None
         try:
-            birth_date = datetime.datetime.strptime(birth_date_str, "%d.%m.%Y").date()
+            birth_date = datetime.datetime.strptime(birth_date_str, "%Y-%m-%d").date()
         except (ValueError, TypeError):
             birth_date = None
-            messages.error(request, "Datum rojstva ni veljaven. Uporabite obliko DD.MM.LLLL.")
+            messages.error(request, "Datum rojstva ni veljaven. Uporabite obliko YYYY-MM-DD.")
 
         if card_number and Attendee.objects.filter(card_number=card_number).exists():
             messages.error(request, "Ta številka kartice je že uporabljena.")
@@ -57,14 +57,16 @@ def arrival_add(request):
     attendees = Attendee.objects.all()
     if request.method == 'POST':
         attendee_id = request.POST.get('attendee_id')
-        arrived_at = request.POST.get('arrived_at')
-        if attendee_id and arrived_at:
+        arrival_date = request.POST.get('arrival_date')
+        arrival_time = request.POST.get('arrival_time')
+        if attendee_id and arrival_date and arrival_time:
             attendee = Attendee.objects.get(id=attendee_id)
             if Arrival.objects.filter(attendee=attendee).exists():
                 messages.error(request, "Ta udeleženec je že bil evidentiran s to številko kartice.")
             else:
                 try:
-                    arrived_at_dt = datetime.datetime.strptime(arrived_at, "%d.%m.%Y %H:%M")
+                    arrived_at_str = f"{arrival_date} {arrival_time}"
+                    arrived_at_dt = datetime.datetime.strptime(arrived_at_str, "%Y-%m-%d %H:%M")
                 except ValueError:
                     arrived_at_dt = None
                 if arrived_at_dt:
@@ -74,7 +76,7 @@ def arrival_add(request):
                     )
                     return redirect('arrival_list')
                 else:
-                    messages.error(request, "Datum prihoda ni veljaven. Uporabite obliko DD.MM.YYYY HH:MM.")
+                    messages.error(request, "Datum ali čas prihoda ni veljaven. Uporabite obliko YYYY-MM-DD in HH:MM.")
     return render(request, 'arrival_add.html', {'attendees': attendees})
 
 def attendee_edit(request, pk):
@@ -163,14 +165,51 @@ def attendee_change_list(request):
     q = request.GET.get('q', '')
     changes = AttendeeChange.objects.all()
     if q:
+        action_map = {
+            'dodaj': 'add',
+            'uredi': 'edit',
+            'delete': 'delete',
+        }
+        q_lower = q.lower()
+        action_value = action_map.get(q_lower)
+        action_filter = Q()
+        if action_value:
+            action_filter = Q(action__iexact=action_value)
         changes = changes.filter(
             Q(attendee__first_name__icontains=q) |
             Q(attendee__last_name__icontains=q) |
             Q(user__email__icontains=q) |
-            Q(action__icontains=q)
+            Q(action__icontains=q) |
+            action_filter
         )
     changes = changes.order_by('-timestamp')
-    return render(request, 'attendee_change_list.html', {'changes': changes})
+
+    formatted_changes = []
+    for change in changes:
+        ts = change.timestamp
+        formatted_timestamp = ts.strftime('%d.%m.%Y %H:%M') if ts else ''
+
+        birth_date = change.data_snapshot.get('birth_date')
+        formatted_birth_date = ''
+        if birth_date:
+            try:
+                from datetime import datetime
+                formatted_birth_date = datetime.strptime(birth_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+            except Exception:
+                formatted_birth_date = birth_date
+
+        data_snapshot = dict(change.data_snapshot)
+        data_snapshot['birth_date'] = formatted_birth_date
+
+        formatted_changes.append({
+            'attendee': change.attendee,
+            'get_action_display': change.get_action_display(),
+            'user': change.user,
+            'timestamp': formatted_timestamp,
+            'data_snapshot': data_snapshot,
+        })
+
+    return render(request, 'attendee_change_list.html', {'changes': formatted_changes})
 
 def serialize_for_json(data):
     for k, v in data.items():
