@@ -1,8 +1,31 @@
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import datetime
+
+@api_view(['POST'])
+def arrival_by_card(request):
+    card_id = request.data.get('card_id')
+    date_time_str = request.data.get('date_time')
+    if not card_id or not date_time_str:
+        return Response({"error": "card_id and date_time are required."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        dt = datetime.datetime.strptime(date_time_str, "%d.%m.%Y %H:%M:%S")
+    except ValueError:
+        try:
+            dt = datetime.datetime.strptime(date_time_str, "%d.%m.%Y %H:%M")
+        except ValueError:
+            return Response({"error": "date_time must be in format DD.MM.YYYY HH:MM[:SS]"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        attendee = Attendee.objects.get(card_number=card_id)
+    except Attendee.DoesNotExist:
+        return Response({"error": "Attendee with this card_id does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    Arrival.objects.create(attendee=attendee, arrived_at=dt)
+    return Response({"status": "ok"})
+
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from .models import Arrival, Attendee
-from .serializers import ArrivalCreateSerializer
-from .serializers import ArrivalCreateSerializer, ArrivalByCardNowSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from attendees.models import Attendee
@@ -22,33 +45,4 @@ def arrival_list(request):
 
 
 
-@api_view(['POST'])
-def arrival_by_card_api(request):
-    serializer = ArrivalCreateSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    attendee = get_object_or_404(Attendee, card_number=serializer.validated_data['card_number'])
-    Arrival.objects.create(
-        attendee=attendee,
-        arrived_at=serializer.validated_data['arrived_at']
-    )
-    return Response({"status": "ok"})
-
-
-
-from django.utils import timezone
-from rest_framework import status
-
-@api_view(['POST'])
-def arrival_by_card_now_api(request):
-    serializer = ArrivalByCardNowSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    attendee = get_object_or_404(Attendee, card_number=serializer.validated_data['card_number'])
-    if Arrival.objects.filter(attendee=attendee).exists():
-        return Response({"error": "Ta udeleženec je že bil evidentiran s to številko kartice."}, status=status.HTTP_400_BAD_REQUEST)
-    Arrival.objects.create(
-        attendee=attendee,
-        arrived_at=timezone.now()
-    )
-    return Response({"status": "ok"})
 

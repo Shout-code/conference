@@ -16,8 +16,12 @@
 {% if request.user.is_staff %}
   <a href="{% url 'attendee_change_list' %}" class="{% if request.resolver_match.url_name == 'attendee_change_list' %}active{% endif %}">Spremembe udeležencev</a>
 {% endif %}
+    <a href="{% url 'logout' %}">Izpis</a>
 </div>
 <div class="main-content">
+  <div class="user-info" style="margin-top: 16px; margin-bottom: 24px; font-size: 18px; font-weight: bold; text-align: center;">
+    Vpisani kot, {{ request.user.first_name|default:request.user.email }} (signed in as {{ request.user.first_name|default:request.user.email }})
+  </div>
   {% if messages %}
     {% for message in messages %}
       {% if forloop.first %}

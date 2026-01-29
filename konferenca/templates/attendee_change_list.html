@@ -19,6 +19,7 @@
       <th>Priimek</th>
       <th>Datum rojstva</th>
       <th>Številka kartice</th>
+      <th>Spremenjena polja</th>
     </tr>
     {% for change in changes %}
     <tr>
@@ -30,6 +31,11 @@
       <td>{{ change.data_snapshot.last_name|default_if_none:'' }}</td>
       <td>{{ change.data_snapshot.birth_date|default_if_none:'' }}</td>
       <td>{{ change.data_snapshot.card_number|default_if_none:'' }}</td>
+      <td>
+        {% if change.changed_fields %}
+          {{ change.changed_fields|join:', ' }}
+        {% endif %}
+      </td>
     </tr>
     {% empty %}
     <tr>

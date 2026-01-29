@@ -23,6 +23,7 @@ class AttendeeChangeLog(models.Model):
     changed_at = models.DateTimeField(auto_now_add=True)
 
 
+
 class AttendeeChange(models.Model):
     ACTION_CHOICES = [
         ('add', 'Dodaj'),
@@ -34,6 +35,7 @@ class AttendeeChange(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     data_snapshot = models.JSONField()
+    changed_fields = models.JSONField(null=True, blank=True, help_text="List of changed fields for edit actions.")
 
     def __str__(self):
         return f'{self.get_action_display()} - {self.attendee} at {self.timestamp}'

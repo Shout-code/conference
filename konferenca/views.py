@@ -1,3 +1,8 @@
+from django.contrib.auth import logout
+# Log out view
+def logout_view(request):
+    logout(request)
+    return redirect('auth')
 from django.shortcuts import render, redirect
 from attendees.models import Attendee, AttendeeChange
 from arrivals.models import Arrival
@@ -22,10 +27,14 @@ def attendee_add(request):
         card_number = request.POST.get('card_number')
         birth_date = None
         try:
-            birth_date = datetime.datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+            # Accept both DD.MM.YYYY and YYYY-MM-DD for flexibility
+            if birth_date_str and '.' in birth_date_str:
+                birth_date = datetime.datetime.strptime(birth_date_str, "%d.%m.%Y").date()
+            else:
+                birth_date = datetime.datetime.strptime(birth_date_str, "%Y-%m-%d").date()
         except (ValueError, TypeError):
             birth_date = None
-            messages.error(request, "Datum rojstva ni veljaven. Uporabite obliko YYYY-MM-DD.")
+            messages.error(request, "Datum rojstva ni veljaven. Uporabite obliko DD.MM.YYYY.")
 
         if card_number and Attendee.objects.filter(card_number=card_number).exists():
             messages.error(request, "Ta številka kartice je že uporabljena.")
@@ -82,29 +91,37 @@ def arrival_add(request):
 def attendee_edit(request, pk):
     attendee = Attendee.objects.get(pk=pk)
     if request.method == 'POST':
-        form = AttendeeForm(request.POST, instance=attendee)
-        if form.is_valid():
+        post_data = request.POST.copy()
+        birth_date_str = post_data.get('birth_date')
+        if birth_date_str:
             try:
-                birth_date = form.cleaned_data['birth_date']
-                attendee = form.save()
-                from attendees.models import AttendeeChange
-                from django.forms.models import model_to_dict
-                AttendeeChange.objects.create(
-                    attendee=attendee,
-                    action='edit',
-                    user=request.user if request.user.is_authenticated else None,
-                    data_snapshot=serialize_for_json(model_to_dict(attendee))
-                )
-                messages.success(request, "Udeleženec uspešno posodobljen.")
-                return redirect('attendee_list')
+                birth_date = datetime.datetime.strptime(birth_date_str, "%d.%m.%Y").date()
+                post_data['birth_date'] = birth_date
             except ValueError:
-                messages.error(request, "Datum rojstva ni veljaven.")
+                messages.error(request, "Datum rojstva ni veljaven. Uporabite obliko DD.MM.YYYY.")
+        form = AttendeeForm(post_data, instance=attendee)
+        if form.is_valid():
+            changed_fields = []
+            for field in form.changed_data:
+                changed_fields.append(field)
+            attendee = form.save()
+            from attendees.models import AttendeeChange
+            from django.forms.models import model_to_dict
+            AttendeeChange.objects.create(
+                attendee=attendee,
+                action='edit',
+                user=request.user if request.user.is_authenticated else None,
+                data_snapshot=serialize_for_json(model_to_dict(attendee)),
+                changed_fields=changed_fields if changed_fields else None
+            )
+            messages.success(request, "Udeleženec uspešno posodobljen.")
+            return redirect('attendee_list')
         else:
             if 'birth_date' in form.errors:
                 messages.error(request, "Datum rojstva ni veljaven.")
     else:
         form = AttendeeForm(instance=attendee)
-    return render(request, 'attendee_form.html', {'form': form})
+    return render(request, 'attendee_edit.html', {'form': form, 'attendee': attendee})
 
 def arrival_list(request):
     arrivals = Arrival.objects.select_related('attendee').all()
@@ -207,6 +224,7 @@ def attendee_change_list(request):
             'user': change.user,
             'timestamp': formatted_timestamp,
             'data_snapshot': data_snapshot,
+            'changed_fields': change.changed_fields if hasattr(change, 'changed_fields') else None,
         })
 
     return render(request, 'attendee_change_list.html', {'changes': formatted_changes})
