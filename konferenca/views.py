@@ -36,7 +36,6 @@ def attendee_add(request):
                 birth_date=birth_date,
                 card_number=card_number
             )
-            # Log add action
             from attendees.models import AttendeeChange
             from django.forms.models import model_to_dict
             AttendeeChange.objects.create(
@@ -61,7 +60,6 @@ def arrival_add(request):
         arrived_at = request.POST.get('arrived_at')
         if attendee_id and arrived_at:
             attendee = Attendee.objects.get(id=attendee_id)
-            # Check if this attendee already has an arrival
             if Arrival.objects.filter(attendee=attendee).exists():
                 messages.error(request, "Ta udeleženec je že bil evidentiran s to številko kartice.")
             else:
@@ -151,7 +149,6 @@ def register_view(request):
             messages.error(request, "Uporabnik s tem emailom že obstaja.")
         else:
             user = User.objects.create_user(
-                username=email,
                 email=email,
                 password=password1,
                 first_name=first_name,
