@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AttendeeSerializer
 from .models import Attendee
-from .forms import AttendeeForm  # type: ignore
+from .forms import AttendeeForm
 from django.contrib import messages
 from datetime import datetime
 
