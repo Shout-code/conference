@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Uredi udeleženca</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label>Ime:
+      <input type="text" name="first_name" value="{{ attendee.first_name }}" required>
+    </label>
+    <label>Priimek:
+      <input type="text" name="last_name" value="{{ attendee.last_name }}" required>
+    </label>
+    <label>Datum rojstva:
+      <input type="text" name="birth_date" value="{{ attendee.birth_date|date:'d.m.Y' }}" required placeholder="DD.MM.YYYY">
+    </label>
+    <label>Številka kartice:
+      <input type="text" name="card_number" value="{{ attendee.card_number }}" required>
+    </label>
+    <button type="submit">Shrani spremembe</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Dodaj udeleženca</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label>Ime:
+      <input type="text" name="first_name" required>
+    </label>
+    <label>Priimek:
+      <input type="text" name="last_name" required>
+    </label>
+    <label>Datum rojstva:
+      <input type="text" name="birth_date" required placeholder="DD.MM.YYYY">
+    </label>
+    <label>Številka kartice:
+      <input type="text" name="card_number" required>
+    </label>
+    <button type="submit">Dodaj</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Pregled prihodov</h2>
+  <form method="get" style="margin-bottom: 18px;">
+    <label>Filtriraj po dnevu:
+      <input type="date" name="date" value="{{ request.GET.date }}">
+    </label>
+    <label>Filtriraj po udeležencu:
+      <select name="attendee_id">
+        <option value="">Vsi</option>
+        {% for attendee in attendees %}
+        <option value="{{ attendee.id }}" {% if request.GET.attendee_id == attendee.id|stringformat:"s" %}selected{% endif %}>
+          {{ attendee.first_name }} {{ attendee.last_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit">Filtriraj</button>
+    <a href="{% url 'arrival_list' %}" class="reset-filter-btn filter-btn">Ponastavi filter</a>
+  </form>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th>Udeleženec</th>
+      <th>Datum in čas prihoda</th>
+    </tr>
+    {% for arrival in arrivals %}
+    <tr>
+      <td>{{ arrival.attendee.first_name }} {{ arrival.attendee.last_name }}</td>
+      <td>{{ arrival.arrived_at }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="2">Ni prihodov.</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

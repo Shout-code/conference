@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container wide-form-container">
+  <h2>Pregled in urejanje udeležencev</h2>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th>Ime</th>
+      <th>Priimek</th>
+      <th>Datum rojstva</th>
+      <th>Številka kartice</th>
+      <th>Uredi</th>
+    </tr>
+    {% for attendee in attendees %}
+  <tr>
+    <td>{{ attendee.first_name }}</td>
+    <td>{{ attendee.last_name }}</td>
+    <td>{{ attendee.birth_date }}</td>
+    <td>{{ attendee.card_number }}</td>
+    <td><a href="{% url 'attendee_edit' attendee.id %}">Uredi</a></td>
+  </tr>
+{% empty %}
+    <tr>
+      <td colspan="5">Ni udeležencev.</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

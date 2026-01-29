@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container wide-form-container">
+  <h2>Pregled sprememb udeležencev (Admin)</h2>
+  <form method="get" class="filter-buttons" style="margin-bottom: 18px; flex-direction: column; align-items: center;">
+    <input type="text" name="q" placeholder="Išči po imenu, priimku, emailu ali akciji" value="{{ request.GET.q }}" class="filter-search">
+    <div class="filter-btn-row">
+      <button type="submit">Išči</button>
+      <a href="?" class="filter-btn">Ponastavi filter</a>
+    </div>
+  </form>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th>Udeleženec</th>
+      <th>Akcija</th>
+      <th>Uporabnik</th>
+      <th>Datum in čas</th>
+      <th>Ime</th>
+      <th>Priimek</th>
+      <th>Datum rojstva</th>
+      <th>Številka kartice</th>
+    </tr>
+    {% for change in changes %}
+    <tr>
+      <td>{{ change.attendee }}</td>
+      <td>{{ change.get_action_display }}</td>
+      <td>{{ change.user }}</td>
+      <td>{{ change.timestamp }}</td>
+      <td>{{ change.data_snapshot.first_name|default_if_none:'' }}</td>
+      <td>{{ change.data_snapshot.last_name|default_if_none:'' }}</td>
+      <td>{{ change.data_snapshot.birth_date|default_if_none:'' }}</td>
+      <td>{{ change.data_snapshot.card_number|default_if_none:'' }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="8">Ni sprememb.</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Registracija</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Ime: <input type="text" name="first_name" required></label><br>
+  <label>Priimek: <input type="text" name="last_name" required></label><br>
+  <label>Email: <input type="email" name="email" required></label><br>
+  <label>Geslo: <input type="password" name="password1" required></label><br>
+  <label>Ponovi geslo: <input type="password" name="password2" required></label><br>
+  <button type="submit">Registriraj se</button>
+</form>
+{% endblock %}

@@ -1,0 +1,252 @@
+.centered-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  font-size: 18px;
+  max-width: 500px;
+}
+
+.message-error {
+  color: #fff;
+  background: #e74c3c;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background-color: #2c3e50;
+  padding-top: 40px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar a {
+  display: block;
+  color: #ecf0f1;
+  padding: 16px 24px;
+  text-decoration: none;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.sidebar a.active {
+  background-color: #1abc9c;
+  color: #fff;
+  font-weight: bold;
+}
+
+.sidebar a:hover {
+  background-color: #34495e;
+}
+
+main {
+  margin-left: 240px; 
+  padding: 24px;
+}
+
+.main-content {
+  margin-left: 240px;
+  padding: 40px 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  box-sizing: border-box;
+}
+
+.form-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  padding: 32px 40px;
+  margin: 40px auto;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-container h2 {
+  margin-bottom: 24px;
+  color: #2c3e50;
+}
+
+.form-container label {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  font-size: 16px;
+  color: #34495e;
+}
+
+.form-container input[type="text"],
+.form-container input[type="date"] {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 16px;
+  background: #f8f9fa;
+  transition: border 0.2s;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="date"]:focus {
+  border: 1.5px solid #1abc9c;
+  outline: none;
+}
+
+.form-container button[type="submit"] {
+  margin-top: 10px;
+  padding: 12px 0;
+  width: 100%;
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-container button[type="submit"]:hover {
+  background: #16a085;
+}
+
+
+.form-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+.form-container th, .form-container td {
+  border: 1px solid #e1e4e8;
+  padding: 8px 10px;
+  text-align: left;
+}
+.form-container th {
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+
+.auth-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical centering */
+  align-items: center;     /* horizontal centering */
+  background: #f8f9fa;
+}
+
+.message-success {
+  color: #fff;
+  background: #27ae60;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15);
+}
+
+
+
+.filter-btn,
+.form-container button[type="submit"] {
+  margin-top: 10px;
+  padding: 12px 0;
+  width: 100%;
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+.filter-btn:hover,
+.form-container button[type="submit"]:hover {
+  background: #16a085;
+}
+
+.wide-form-container {
+  max-width: 1100px !important;
+  width: 100% !important;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.filter-buttons input[type="text"] {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 12px 0;
+  background: #f8f9fa;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+  height: 48px;
+}
+.filter-buttons button,
+.filter-buttons .filter-btn {
+  width: 180px;
+  padding: 12px 0;
+  font-size: 18px;
+  height: 48px;
+}
+
+
+.filter-search {
+  width: 360px;
+  padding: 12px 0;
+  background: #f8f9fa;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.filter-btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 360px;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-btn-row button,
+.filter-btn-row .filter-btn {
+  width: 360px;
+  padding: 12px 0;
+  font-size: 18px;
+  height: 48px;
+  box-sizing: border-box;
+}

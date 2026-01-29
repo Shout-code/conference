@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konferenca</title>
+ <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+<div class="sidebar">
+  <a href="{% url 'attendee_add' %}" class="{% if request.resolver_match.url_name == 'attendee_add' %}active{% endif %}">Dodaj udeleženca</a>
+  <a href="{% url 'attendee_list' %}" class="{% if request.resolver_match.url_name == 'attendee_list' %}active{% endif %}">Pregled in urejanje</a>
+  <a href="{% url 'arrival_add' %}" class="{% if request.resolver_match.url_name == 'arrival_add' %}active{% endif %}">Dodajanje prihodov</a>
+  <a href="{% url 'arrival_list' %}" class="{% if request.resolver_match.url_name == 'arrival_list' %}active{% endif %}">Pregled prihodov</a>
+{% if request.user.is_staff %}
+  <a href="{% url 'attendee_change_list' %}" class="{% if request.resolver_match.url_name == 'attendee_change_list' %}active{% endif %}">Spremembe udeležencev</a>
+{% endif %}
+</div>
+<div class="main-content">
+  {% if messages %}
+    {% for message in messages %}
+      {% if forloop.first %}
+        <div class="message-{{ message.tags }} centered-message">{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  {% block content %}{% endblock %}
+</div>
+</div>
+</body>
+</html>

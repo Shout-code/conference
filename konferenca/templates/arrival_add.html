@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+  <h2>Dodajanje prihodov</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label>Udeleženec:
+      <select name="attendee_id" required>
+        {% for attendee in attendees %}
+        <option value="{{ attendee.id }}">{{ attendee.first_name }} {{ attendee.last_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+   <label>Datum in čas prihoda:
+  <input type="text" name="arrived_at" required placeholder="DD.MM.YYYY HH:MM">
+</label>
+    <button type="submit">Dodaj prihod</button>
+  </form>
+</div>
+{% endblock %}
