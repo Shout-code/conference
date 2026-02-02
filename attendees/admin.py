@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import AttendeeChange
 
+
+# Admin vmesnik za model AttendeeChange
 @admin.register(AttendeeChange)
 class AttendeeChangeAdmin(admin.ModelAdmin):
     list_display = ('attendee', 'action', 'timestamp', 'user')

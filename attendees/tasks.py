@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 
 from celery import shared_task
 
+
+# Periodična naloga za pošiljanje dnevnega poročila o novih udeležencih
 @shared_task
 def daily_new_attendees_report():
     today = timezone.now().date()

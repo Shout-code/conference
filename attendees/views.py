@@ -7,6 +7,8 @@ from .forms import AttendeeForm
 from django.contrib import messages
 from datetime import datetime
 
+
+# Pogled za prikaz seznama vseh udeležencev
 def attendee_list(request):
     attendees = Attendee.objects.all()
     return render(request, 'attendee_list.html', {'attendees': attendees})
@@ -14,6 +16,8 @@ def attendee_list(request):
 from django.contrib import messages
 from datetime import datetime
 
+
+# Pogled za dodajanje novega udeleženca
 def attendee_add(request):
     if request.method == 'POST':
         form = AttendeeForm(request.POST)
@@ -33,6 +37,8 @@ def attendee_add(request):
     return render(request, 'attendee_form.html', {'form': form})
 
 
+
+# API pogled za pridobivanje vseh udeležencev v JSON obliki
 @api_view(['GET'])
 def attendees_api(request):
     return Response(AttendeeSerializer(Attendee.objects.all(), many=True).data)
